@@ -16,7 +16,7 @@ for node_data in nodes_data:
     properties = node_data["n"]["properties"]
     
     try:
-        start_identity = node_data["n"]["identity"]
+        start_identity = node_data["n"]["identity"] -770
         node = Node(*node_data["n"]["labels"], **properties)
         graph.create(node)
     except KeyError as e:
@@ -29,8 +29,8 @@ with open('records_link.json', 'r', encoding="utf_8_sig") as link_file:
 
 # 遍历连边数据，创建关系并添加到数据库
 for link_data in links_data:
-    start_identity = link_data["p"]["start"]["identity"]
-    end_identity = link_data["p"]["end"]["identity"]
+    start_identity = link_data["p"]["start"]["identity"]-770
+    end_identity = link_data["p"]["end"]["identity"]-770
     relationship_type = link_data["p"]["segments"][0]["relationship"]["type"]
     
     try:

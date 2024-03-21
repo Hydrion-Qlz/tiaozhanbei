@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Flask Vue Example</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <p>{{ message }}</p>
+            <button @click="changeMessage()">Change Message</button>
+        </div>
+
+        <script>
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    message: 'Hello, Vue!',
+                },
+                methods: {
+                    changeMessage() {
+                        console.log(123);
+                        this.message = 'New message!';
+                        console.log(this.message);
+                    },
+                },
+            });
+        </script>
+    </body>
+</html>

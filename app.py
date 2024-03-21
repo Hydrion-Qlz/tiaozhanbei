@@ -6,9 +6,12 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
-
 def index(name=None):
     return render_template('index.html', name = name)
+
+@app.route('/a', methods=['GET', 'POST'])
+def a(name=None):
+    return render_template('a.html', name = name)
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -19,6 +22,8 @@ def search():
 @app.route('/KGQA', methods=['GET', 'POST'])
 def KGQA():
     return render_template('KGQA.html')
+
+
 @app.route('/get_profile',methods=['GET','POST'])
 # def get_profile():
 #     name = request.args.get('character_name')
