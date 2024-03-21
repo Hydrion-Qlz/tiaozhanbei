@@ -1,29 +1,243 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Flask Vue Example</title>
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    </head>
-    <body>
-        <div id="app">
-            <p>{{ message }}</p>
-            <button @click="changeMessage()">Change Message</button>
-        </div>
+  <head>
+    <title>Flask Vue Example</title>
+    <script src="https://unpkg.com/dayjs/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/customParseFormat.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/weekday.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/localeData.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/weekOfYear.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/weekYear.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/advancedFormat.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/quarterOfYear.js"></script>
+    <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/ant-design-vue@4.0.3/dist/antd.min.js"></script>
+    <script src="../static/js/echarts.min.js"></script>
+    <!-- <script src="https://unpkg.com/browse/echarts@4.2.1j/dist/echarts.js"></script> -->
 
-        <script>
-            var app = new Vue({
-                el: '#app',
-                data: {
-                    message: 'Hello, Vue!',
+    <link rel="stylesheet" href="https://unpkg.com/ant-design-vue@4.0.3/dist/reset.css" />
+    <style>
+      .base-info {
+        line-height: 26px;
+        font-size: 16px;
+      }
+      .btn-container {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .btn-item {
+        width: 250px;
+        height: 50px;
+        margin-top: 20px;
+      }
+      #chart-containe-body,
+      #chart-container {
+        width: 600px;
+        height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <a-button type="primary" @click="showDrawer" style="margin: 30px 30px">Open</a-button>
+      <a-drawer v-model:open="openState.drawer" :title="enterpriseData.name" placement="right">
+        <div class="base-info">成立年数: [[enterpriseData.Rgst_years]] 年</div>
+        <div class="base-info">注册资本: [[enterpriseData.Corp_Rgst_Cap]] 万元</div>
+        <div class="base-info">股东人数: [[enterpriseData.Shareholders_Num]] 人</div>
+        <div class="base-info">公司人数: [[enterpriseData.Rgst_years]] 人</div>
+        <div class="base-info">风险预测: [[enterpriseData.Warning]]</div>
+        <div class="btn-container">
+          <a-button class="btn-item" @click="openModal('creditRecord')">信用记录</a-button>
+          <a-button class="btn-item" @click="openModal('financialState')">财务状况</a-button>
+          <a-button class="btn-item" @click="openModal('loanRecord')">贷款记录</a-button>
+          <a-button class="btn-item" @click="openModal('industryState')">行业情况</a-button>
+        </div>
+      </a-drawer>
+      <a-modal v-model:open="openState.creditRecord" :footer="null" title="信用状况">
+        <div style="height: 100px; padding-top: 30px">该公司信用等级为: [[getRandomValueFromCreditArray()]]</div>
+      </a-modal>
+      <a-modal v-model:open="openState.financialState" :footer="null" width="600px" title="财务状况" id="financialStateModal">
+        <div style="height: 450px; text-align: center">
+          <div id="chart-container"></div>
+          <a-radio-group style="width: 400px; line-height: 30px" v-model:value="financialRatioValue" :options="financialRadioOptions" @change="financialRadioChange" />
+        </div>
+      </a-modal>
+      <a-modal v-model:open="openState.loanRecord" :footer="null" title="贷款记录">
+        <div style="height: 150px; padding-top: 25px; line-height: 30px">
+          <div>近1月贷款: [[loanValue.month]] 万元</div>
+          <div>近1年贷款: [[loanValue.year]] 万元</div>
+          <div>总贷款: [[loanValue.all]] 万元</div>
+        </div>
+      </a-modal>
+      <a-modal v-model:open="openState.industryState" :footer="null" title="行业情况">
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </a-modal>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        delimiters: ["[[", "]]"],
+        data: () => ({
+          text: "123",
+          openState: {
+            drawer: true,
+            creditRecord: false,
+            financialState: false,
+            loanRecord: false,
+            industryState: false,
+          },
+          enterpriseData: {
+            Corp_Rgst_Cap: "56695",
+            Employees_Num: "8571",
+            Rgst_years: "18",
+            Shareholders_Num: "64263",
+            Warning: "暂无风险",
+            category: 0,
+            name: "深圳市卓翼科技股份有限公司",
+          },
+          creditValue: ["AAA-", "sAAA", "AAA", "sAAA-", "AA+"],
+          loanValue: {
+            month: 25,
+            year: 412,
+            all: 1192,
+          },
+          financialRatioValue: "ROE",
+          financialRadioOptions: [
+            { label: "ROE(%)", value: "ROE" },
+            { label: "毛利率(万元)", value: "GM" },
+            { label: "总营收(万元)", value: "TR" },
+            { label: "总利润(万元)", value: "TP" },
+            { label: "总资产(万元)", value: "TA" },
+            { label: "总负债(万元)", value: "TL" },
+          ],
+          financialDict: {
+            ROE: { name: "ROE(%)", type: "line" },
+            GM: { name: "毛利率(万元)", type: "line" },
+            TR: { name: "总营收(万元)", type: "bar" },
+            TP: { name: "总利润(万元)", type: "bar" },
+            TA: { name: "总资产(万元)", type: "bar" },
+            TL: { name: "总负债(万元)", type: "bar" },
+          },
+          //   ROE - ROE %
+          //   毛利率（Gross Profit Margin）- GM %
+          //   总营收（Total Revenue）- TR 万元
+          //   总利润（Total Profit）- TP 万元
+          //   总资产（Total Assets）- TA 万元
+          //   总负债（Total Liabilities）- TL 万元
+          financialValue: {
+            ROE: {
+              "2022Q4": -12.31,
+              "2023Q1": 10.83,
+              "2023Q2": 18.68,
+              "2023Q3": 22.17,
+              "2023Q4": 17.42,
+            },
+            GM: {
+              "2022Q4": 23.71,
+              "2023Q1": 46.22,
+              "2023Q2": 42.66,
+              "2023Q3": 38.05,
+              "2023Q4": 31.61,
+            },
+            TR: {
+              "2022Q4": 21.12,
+              "2023Q1": 9.14,
+              "2023Q2": 18.53,
+              "2023Q3": 26.58,
+              "2023Q4": 32.25,
+            },
+            TP: {
+              "2022Q4": -3.88,
+              "2023Q1": 3.29,
+              "2023Q2": 5.28,
+              "2023Q3": 6.98,
+              "2023Q4": 5.23,
+            },
+            TA: {
+              "2022Q4": 59.34,
+              "2023Q1": 59.78,
+              "2023Q2": 59.96,
+              "2023Q3": 57.82,
+              "2023Q4": 66.75,
+            },
+            TL: {
+              "2022Q4": 30.82,
+              "2023Q1": 27.99,
+              "2023Q2": 25.63,
+              "2023Q3": 22.33,
+              "2023Q4": 20.37,
+            },
+          },
+        }),
+        mounted() {},
+        methods: {
+          showDrawer() {
+            this.openState.drawer = true;
+          },
+          openModal(modalName) {
+            this.openState[modalName] = true;
+            if (modalName == "financialState") {
+              const RoeData = this.financialValue.ROE;
+              setTimeout(() => {
+                this.renderChart("ROE");
+              }, 500);
+            }
+          },
+          financialRadioChange(event) {
+            console.log(event);
+            console.log(event.target.value);
+            const type = event.target.value;
+            this.renderChart(type);
+          },
+          renderChart(type) {
+            const chartContainer = document.getElementById("chart-container");
+            var myChart = echarts.init(chartContainer);
+            console.log(myChart);
+
+            const data = this.financialValue[type];
+            const legend = [this.financialDict[type].name];
+            const seriesType = this.financialDict[type].type;
+            console.log(seriesType);
+            const options = {
+              xAxis: {
+                type: "category",
+                data: Object.keys(data),
+              },
+              yAxis: {
+                type: "value",
+              },
+              series: [
+                {
+                  name: "ROE(%)",
+                  type: seriesType,
+                  data: Object.values(data),
                 },
-                methods: {
-                    changeMessage() {
-                        console.log(123);
-                        this.message = 'New message!';
-                        console.log(this.message);
-                    },
-                },
-            });
-        </script>
-    </body>
+              ],
+            };
+            console.log("options", options);
+            myChart.setOption(options);
+          },
+          closeModal(modalName) {
+            this.openState[modalName] = false;
+          },
+          getRandomValueFromCreditArray() {
+            var randomIndex = Math.floor(Math.random() * this.creditValue.length);
+
+            return this.creditValue[randomIndex];
+          },
+        },
+      });
+      Object.values(antd).forEach((o) => {
+        if (typeof o == "object" && o.name) {
+          app.component(o.name, o);
+        }
+      });
+      app.mount("#app");
+    </script>
+  </body>
 </html>
