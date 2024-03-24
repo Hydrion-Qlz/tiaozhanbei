@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from neo_db.query_graph import query,queryf2
-
+import json
 app = Flask(__name__)
 
 
@@ -13,10 +13,24 @@ def index(name=None):
 def a(name=None):
     return render_template('a.html', name = name)
 
+@app.route('/echart', methods=['GET', 'POST'])
+def echart(name=None):
+    return render_template('echart.html', name = name)
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     return render_template('search.html')
+
+@app.route('/getIndustryInfoList', methods=['GET'])
+def getIndustryInfoList():
+    companyName = request.args.get("companyName")
+    with open("scripts/info.json") as f:
+        data = json.load(f)
+    print(data)
+    print(type(data))
+    print(data.get(companyName))
+    return data.get(companyName, [])
+    
 
 
 @app.route('/KGQA', methods=['GET', 'POST'])

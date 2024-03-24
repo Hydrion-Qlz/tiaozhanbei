@@ -12,6 +12,7 @@
     <script src="https://unpkg.com/dayjs/plugin/quarterOfYear.js"></script>
     <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.js"></script>
     <script src="https://unpkg.com/ant-design-vue@4.0.3/dist/antd.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="../static/js/echarts.min.js"></script>
     <!-- <script src="https://unpkg.com/browse/echarts@4.2.1j/dist/echarts.js"></script> -->
 
@@ -53,7 +54,7 @@
           <a-button class="btn-item" @click="openModal('creditRecord')">信用记录</a-button>
           <a-button class="btn-item" @click="openModal('financialState')">财务状况</a-button>
           <a-button class="btn-item" @click="openModal('loanRecord')">贷款记录</a-button>
-          <a-button class="btn-item" @click="openModal('industryState')">行业情况</a-button>
+          <a-button class="btn-item" @click="openModal('industryInfo')">行业简讯</a-button>
         </div>
       </a-drawer>
       <a-modal v-model:open="openState.creditRecord" :footer="null" title="信用状况">
@@ -72,14 +73,35 @@
           <div>总贷款: [[loanValue.all]] 万元</div>
         </div>
       </a-modal>
-      <a-modal v-model:open="openState.industryState" :footer="null" title="行业情况">
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+      <a-modal v-model:open="openState.industryInfo" width="800px" :footer="null" title="行业简讯">
+        <a-table :data-source="industryInfoData" :columns="industryInfoColumns" />
       </a-modal>
     </div>
 
     <script>
+      const industryInfoColumns = [
+        {
+          title: "序号",
+          dataIndex: "idx",
+          key: "idx",
+        },
+        {
+          title: "行业",
+          dataIndex: "行业",
+          key: "行业",
+        },
+        {
+          title: "标题",
+          dataIndex: "标题",
+          key: "标题",
+        },
+        {
+          title: "摘要",
+          dataIndex: "摘要",
+          key: "摘要",
+        },
+      ];
+
       const app = Vue.createApp({
         delimiters: ["[[", "]]"],
         data: () => ({
@@ -89,7 +111,7 @@
             creditRecord: false,
             financialState: false,
             loanRecord: false,
-            industryState: false,
+            industryInfo: false,
           },
           enterpriseData: {
             Corp_Rgst_Cap: "56695",
@@ -173,19 +195,30 @@
               "2023Q4": 20.37,
             },
           },
+          industryInfoData: [],
+          industryInfoColumns,
         }),
         mounted() {},
         methods: {
           showDrawer() {
             this.openState.drawer = true;
           },
-          openModal(modalName) {
+          async openModal(modalName) {
             this.openState[modalName] = true;
             if (modalName == "financialState") {
               const RoeData = this.financialValue.ROE;
               setTimeout(() => {
                 this.renderChart("ROE");
               }, 500);
+            }
+            if (modalName == "industryInfo") {
+              const resp = await axios.get(`http://127.0.0.1:5000/getIndustryInfoList?companyName=${this.enterpriseData.name}`);
+              this.industryInfoData = resp.data;
+              let i = 1;
+              this.industryInfoData.forEach((item) => {
+                item.idx = i++;
+              });
+              console.log(this.industryInfoData);
             }
           },
           financialRadioChange(event) {
