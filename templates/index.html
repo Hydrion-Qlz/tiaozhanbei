@@ -1,87 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="shortcut icon" href="../static/images/logo.jpg" />
-        <title>开启探索</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="../static/images/logo.jpg" />
+    <title>开启探索</title>
 
-        <!--Bootstrap Stylesheet [ REQUIRED ]-->
-        <!-- <link href="../static/css/bootstrap.min.css" rel="stylesheet" /> -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ant-design-vue@4.1.2/dist/antd.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/ant-design-vue@4.1.2/dist/antd.min.js"></script>
+    <!--Bootstrap Stylesheet [ REQUIRED ]-->
+    <!-- <link href="../static/css/bootstrap.min.css" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ant-design-vue@4.1.2/dist/antd.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/ant-design-vue@4.1.2/dist/antd.min.js"></script>
 
-        <style type="text/css">
-            #container {
-                background: url('../static/images/bk3.jpg');
-                background-position: 100% 100%;
-                background-size: 100% auto;
-            }
-            #a {
-                font-size: 20px;
-                font-weight: normal;
-                width: 230px;
-                display: block;
-                margin: 80px auto;
-                /*text-decoration: none;*/
-                padding: 12px 50px;
-                border-radius: 5px;
-                border: 1px solid #ffffff;
-                background-color: transparent;
-                text-align: center;
-                /*margin_bottom: 10px;
+    <style type="text/css">
+      #container {
+        background: url("../static/images/bk3.jpg");
+        background-position: 100% 100%;
+        background-size: 100% auto;
+      }
+      #a {
+        font-size: 20px;
+        font-weight: normal;
+        width: 230px;
+        display: block;
+        margin: 80px auto;
+        /*text-decoration: none;*/
+        padding: 12px 50px;
+        border-radius: 5px;
+        border: 1px solid #ffffff;
+        background-color: transparent;
+        text-align: center;
+        /*margin_bottom: 10px;
 	margin_left: 100px;*/
-                color: #ffffff;
-                cursor: pointer;
-            }
-            #a:hover {
-                background-color: #249e92;
-                cursor: pointer;
-            }
-            p {
-                font-size: 40px;
-                font-weight: normal;
-                /* //font-color: */
-                margin-bottom: 90px;
-            }
-        </style>
+        color: #ffffff;
+        cursor: pointer;
+      }
+      #a:hover {
+        background-color: #249e92;
+        cursor: pointer;
+      }
+      p {
+        font-size: 40px;
+        font-weight: normal;
+        /* //font-color: */
+        margin-bottom: 90px;
+      }
+    </style>
 
-        <!--Nifty Stylesheet [ REQUIRED ]-->
-        <link href="../static/css/nifty.min.css" rel="stylesheet" />
+    <!--Nifty Stylesheet [ REQUIRED ]-->
+    <link href="../static/css/nifty.min.css" rel="stylesheet" />
 
-        <!--Demo [ DEMONSTRATION ]-->
-        <link href="../static/css/nifty-demo.min.css" rel="stylesheet" />
-        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    </head>
+    <!--Demo [ DEMONSTRATION ]-->
+    <link href="../static/css/nifty-demo.min.css" rel="stylesheet" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
 
-    <body>
-        <!-- <div id="container" class="cls-container">
-            <div class="cls-content" style="margin-top: 150px">
-                <div class="mar-ver pad-btm">
-                    <p class="text-muted" style="color: white">基于知识图谱的企业风险预测系统</p>
-                    <a id="a" href="{{ url_for('search')}}">开启探索</a>
-                    <a-button type="primary">Primary Button</a-button>
-                </div>
-            </div>
-        </div> -->
-
-        <div id="app">
-            [[message]]
-            <a-button type="primary">12</a-button>
+  <body>
+    <div id="container" class="cls-container">
+      <div class="cls-content" style="margin-top: 150px">
+        <div class="mar-ver pad-btm">
+          <p class="text-muted" style="color: white">基于知识图谱的企业风险预测系统</p>
+          <a id="a" href="{{ url_for('search')}}">开启探索</a>
+          <a-button type="primary">Primary Button</a-button>
         </div>
-        <script>
-            const { createApp } = Vue;
-            // import { Button } from 'ant-design-vue';
+      </div>
+    </div>
 
-            const app = createApp({
-                delimiters: ['[[', ']]'],
-                data() {
-                    return {
-                        message: 'Hello Vue!',
-                    };
-                },
-            }).mount('#app');
-            app.use(antd.Button);
-        </script>
-    </body>
+    <!-- <div id="app">
+      [[message]]
+      <a-button type="primary">12</a-button>
+    </div>
+    <script>
+      const { createApp } = Vue;
+      // import { Button } from 'ant-design-vue';
+
+      const app = createApp({
+        delimiters: ["[[", "]]"],
+        data() {
+          return {
+            message: "Hello Vue!",
+          };
+        },
+      }).mount("#app");
+      app.use(antd.Button);
+    </script> -->
+  </body>
 </html>
