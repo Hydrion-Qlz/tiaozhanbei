@@ -24,7 +24,7 @@ def search():
 @app.route('/getIndustryInfoList', methods=['GET'])
 def getIndustryInfoList():
     companyName = request.args.get("companyName")
-    with open("scripts/info.json") as f:
+    with open("scripts/info.json", encoding='utf-8') as f:
         data = json.load(f)
     print(data)
     print(type(data))
