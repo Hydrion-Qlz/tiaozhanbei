@@ -158,8 +158,9 @@
                 <div class="col-lg-2"></div>
                 <div class="col-lg-4">
                   <div class="input-group">
-                    <input type="text" id="search" class="form-control input-lg" placeholder="请输入你要检索的企业名称..." />
-                    <span class="input-group-addon btn btn-mint" onclick="search()">搜索</span>
+                    <a-input-search style="width: 350px" v-model:value="searchValue" size="large" @search="onSearchEnterprise" enter-button id="search" placeholder="请输入你要检索的企业名称...">
+                    </a-input-search>
+                    <!-- <span onclick="search()">搜索</span> -->
                   </div>
                 </div>
               </div>
@@ -310,6 +311,7 @@
             category: 0,
             name: "深圳市卓翼科技股份有限公司",
           },
+          searchValue: "",
           creditValue: ["AAA-", "sAAA", "AAA", "sAAA-", "AA+"],
           loanValue: {
             month: 25,
@@ -388,14 +390,6 @@
           mychart: "",
         }),
         mounted() {
-          $(document).keypress(function (e) {
-            // 回车键事件
-            if (e.which == 13) {
-              search();
-            }
-          });
-
-          $.ajaxSetup({ async: false });
           this.myChart = echarts.init(document.getElementById("guanxi"));
           this.myChart.showLoading();
           this.myChart.hideLoading();
@@ -532,9 +526,16 @@
           showDrawer() {
             this.openState.drawer = true;
           },
+          async onSearchEnterprise() {
+            console.log(this.searchValue);
+            await this.updateEchart(this.searchValue);
+          },
           async tagClick(event) {
             console.log(event);
             const name = event.target.innerText;
+            await this.updateEchart(name);
+          },
+          async updateEchart(name) {
             const response = await axios.get("http://127.0.0.1:5000/search_name", {
               params: {
                 name: name,
